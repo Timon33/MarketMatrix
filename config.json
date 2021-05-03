@@ -1,0 +1,22 @@
+{
+    "stock_fee": {
+        "name": "Stock fee %",
+        "type": "text_input",
+        "value": "0.1"
+    },
+    "strategys_path": {
+        "name": "Strategys folder path",
+        "type": "text_input",
+        "value": "/home/odium/store/trading/market_matrix/strategys"
+    },
+    "backtest_path": {
+        "name": "Strategys folder path",
+        "type": "text_input",
+        "value": "/home/odium/store/trading/market_matrix/backtest"
+    },
+    "live_path": {
+        "name": "Strategys folder path",
+        "type": "text_input",
+        "value": "/home/odium/store/trading/market_matrix/live"
+    }
+}
