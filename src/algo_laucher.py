@@ -51,6 +51,9 @@ def run_backtest(name, strategy, start_date, end_date, starting_cash, interval):
     with open(os.path.join(result_folder, "records.csv"), "w") as f:
         strategy.recordings.to_csv(f)
 
+    with open(os.path.join(result_folder, "trades.json"), "w") as f:
+        json.dump(strategy.trades, f, indent=4, default=str)
+
     statistics = create_statistics(strategy)
     with open(os.path.join(result_folder, "statistics.json"), "w") as f:
         json.dump(statistics, f)
