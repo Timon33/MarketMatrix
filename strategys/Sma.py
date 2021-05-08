@@ -1,6 +1,7 @@
 import pandas as pd
 import random
 from datetime import datetime, timedelta
+import ta
 
 from market import strategy
 
@@ -10,6 +11,15 @@ class Sma(strategy.Strategy):
 
     def initialize(self):
         self.tickers = ["ETH-USD"]
+
+    def rsi(self, window):
+        rsi = ta.momentum.RSIIndicator(self.data["ETH-USD"].Close, window=window).rsi()
+        self.record("rsi", rsi[-1])
+        return rsi
+
+
+    def entry_signal(self):
+        ema_dst = spy_c[-8:].mean() - spy_c[-35:].mean()
     
     def on_data(self):
         spy_c = self.data["ETH-USD"].Close
@@ -19,12 +29,4 @@ class Sma(strategy.Strategy):
         self.record("sma_l", sma_l)
         self.record("sma_s", sma_s)
 
-        if self.holdings["ETH-USD"] > 0:
-            if sma_s < sma_l:
-                self.market_order("ETH-USD", -self.holdings["ETH-USD"])
-                self.record("sell", spy_c[-1])
-
-        else:
-            if sma_s > sma_l:
-                self.market_order("ETH-USD", 1)
-                self.record("buy", spy_c[-1])
+        self.rsi(15)

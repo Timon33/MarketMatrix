@@ -7,10 +7,12 @@ from datetime import datetime, timedelta
 
 import settings
 
-def add_chart(records):
-    with st.beta_expander("Chart"):
+def custom_chart(records):
+
+    with st.beta_expander("Custom Chart"):
         fig = go.Figure()
 
+        # select records to display
         lines = st.multiselect("", records.columns, key="lines")
         marker = st.multiselect("", records.columns, key="markers")
 
@@ -25,10 +27,12 @@ def add_chart(records):
         st.plotly_chart(fig, use_container_width=True)
 
 def equity_chart(quity_data):
-    fig = go.Figure()
-    trace = go.Scatter(x=quity_data.index, y=quity_data, name="equity", mode='lines')
-    fig.add_trace(trace)
-    st.plotly_chart(fig, use_container_width=True)
+
+    with st.beta_expander("Equity Chart"):
+        fig = go.Figure()
+        trace = go.Scatter(x=quity_data.index, y=quity_data, name="equity", mode='lines')
+        fig.add_trace(trace)
+        st.plotly_chart(fig, use_container_width=True)
 
 def trades_chart(trades, price_data):
     
@@ -61,11 +65,24 @@ def trades_chart(trades, price_data):
 
         fig.add_trace(trades)
 
-    st.plotly_chart(fig, use_container_width=True)
+    with st.beta_expander("Trades Chart"):
+        st.plotly_chart(fig, use_container_width=True)
 
 
 def display_statistics(stats):
-    st.json(stats)
+
+    data = pd.DataFrame.from_dict(stats, orient='index')
+    fig = go.Figure(data=go.Table(
+        header=dict(fill=dict(color="#000000")),
+        cells=dict(
+            values=[data.index, f"{float(data.iloc[0]):.2f}"],
+            align=("left", "right"),
+            font=dict(color="black", size=17)
+        )
+    ))
+
+    with st.beta_expander("Statistics"):
+        st.plotly_chart(fig, use_container_width=True)
 
 def app():
     st.title("Backtest Results")
@@ -87,5 +104,7 @@ def app():
     equity_chart(records.equity)
     trades_chart(trades, records)
     display_statistics(statistics)
+    
+    custom_chart(records)
 
 

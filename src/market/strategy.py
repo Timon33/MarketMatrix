@@ -12,6 +12,8 @@ class Strategy():
         self._trades = []
         self.tickers = []
 
+        self.broker = None
+
         self.fee = 0
 
     # propertys
@@ -68,9 +70,14 @@ class Strategy():
         self.tickers.append(ticker)
 
     def market_order(self, symbol: str, qty: float):
+
+        if round(qty) == 0:
+            return
+
         price = self.data[symbol].Close[-1]
         cost = price * qty
         self._cash -= abs(cost) * self.fee
+
         if abs(cost) < self.bp:
             self._cash -= cost
             self._holdings[symbol] += qty

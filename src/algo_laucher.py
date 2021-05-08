@@ -85,7 +85,7 @@ def app():
     with st.beta_expander("Backtest"):
 
         # parameter selector
-        name = st.text_input("Strategy Name")
+        name = st.text_input("Strategy Name", value=file)
 
         c1, c2 = st.beta_columns(2)
         with c1: start_date = st.date_input("From", value=datetime.today() - timedelta(weeks=208))
