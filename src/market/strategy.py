@@ -12,10 +12,6 @@ class Strategy():
         self._trades = []
         self.tickers = []
 
-        self.broker = None
-
-        self.fee = 0
-
     # propertys
     @property
     def start_cash(self):
@@ -68,23 +64,6 @@ class Strategy():
 
     def add_ticker(ticker: str):
         self.tickers.append(ticker)
-
-    def market_order(self, symbol: str, qty: float):
-
-        if round(qty) == 0:
-            return
-
-        price = self.data[symbol].Close[-1]
-        cost = price * qty
-        self._cash -= abs(cost) * self.fee
-
-        if abs(cost) < self.bp:
-            self._cash -= cost
-            self._holdings[symbol] += qty
-
-            self._trades.append({"time": self.time, "symbol": symbol, "price": price, "qty": qty, "cost": cost})
-        else:
-            raise Exception("Not enoght Buying Power")
     
 
     # internals
@@ -103,6 +82,7 @@ class Strategy():
         for sym in data:
             self.record(sym, data[sym].Close[-1])
 
+        self.broker.on_data(time, data)
         self.on_data()
 
     def _terminate(self):
